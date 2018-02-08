@@ -73,7 +73,7 @@ def main():
     jsonresult = getchildrenrequest.json()
     totalnrofresults = jsonresult['totalNrOfResults']
     children = jsonresult['mediaDataList']
-    logging.info('Fragment has ' + str(totalnrofresults) + ' children: ')
+    logging.info('Fragment has ' + str(totalnrofresults) + ' children.')
 
 
 def init_logger():
