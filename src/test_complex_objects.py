@@ -17,7 +17,6 @@ def main():
     arguments = Arguments()
     init_logger()
     parser = argparse.ArgumentParser()
-    #    parser.add_argument('--fragmentid', help='the fragment id of the complex object', type=str)
     parser.add_argument('--username', help='the username to use when connecting to mediahaven', type=str)
     parser.add_argument('--password', help='the password to use when connecting to mediahaven', type=str)
     parser.add_argument('--environment', help='the environment to test. QAS or PRD', type=str)
@@ -126,9 +125,6 @@ def init_logger():
 
 
 def check_arguments(arguments):
-    # if fragmentid is None:
-    #     close("No fragment id specified")
-
     if arguments.username is None:
         close("No username specified")
 
