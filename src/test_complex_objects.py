@@ -38,15 +38,17 @@ def main():
     getsetrequest = requests.get(getseturl + '?q=%2B(MediaObjectType:Set)',
                                  auth=HTTPBasicAuth(arguments.username, arguments.password))
     getsetresponse = getsetrequest.json();
-    getsetrequestnrofresults = getsetresponse['totalNrOfResults']
-    if getsetrequestnrofresults > 0:
-        setresults = getsetresponse['mediaDataList']
+    nr_of_results = getsetresponse['totalNrOfResults']
+    logging.info('totalNrOfResults is: %s' % nr_of_results)
+    setresults = getsetresponse['mediaDataList']
+    if setresults:
         for complex in setresults:
             fragmentid = complex['fragmentId']
+            logging.debug('Checking fragmentId "%s" for children...' % fragmentid)
             nrofchildren = checknumberofchildren(arguments, fragmentid)
             if nrofchildren > 0:
-                logging.info('Found a set (' + fragmentid + ') with ' + str(nrofchildren) + ' children.')
-                #~ performoperations(arguments, fragmentid)
+                logging.info('Found a set (%s) with %s children.' % (fragmentid, nrofchildren))
+                performoperations(arguments, fragmentid)
                 break
 
 def checknumberofchildren(arguments, fragmentid):
