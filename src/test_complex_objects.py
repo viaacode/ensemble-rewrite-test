@@ -4,7 +4,6 @@ import random
 import requests
 import time
 from requests.auth import HTTPBasicAuth
-
 from arguments import Arguments
 
 __author__ = 'viaa'
@@ -18,22 +17,53 @@ def main():
     arguments = Arguments()
     init_logger()
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fragment_id', help='the fragment id of the complex object', type=str)
-    parser.add_argument('--username', help='the username to use when connecting to mediahaven', type=str)
-    parser.add_argument('--password', help='the password to use when connecting to mediahaven', type=str)
-    parser.add_argument('--environment', help='the environment to test. QAS or PRD', type=str)
+    parser.add_argument('-u', '--username', type=str, dest='username',
+            required=True,
+            help='Username to use when connecting to mediahaven.')
+    parser.add_argument('-p', '--password', type=str, dest='password',
+            required=True,
+            help='Password to use when connecting to mediahaven.')
+    parser.add_argument('-e', '--environment', type=str, choices=['QAS', 'PRD'],
+            help='The environment to test. QAS or PRD.')
     parser.parse_args(namespace=arguments)
 
     check_arguments(arguments)
 
     logging.info('Running in environment: ' + arguments.environment)
 
-    url = arguments.baseurl + PATH + arguments.fragment_id + '/children'
+    getseturl = arguments.baseurl + PATH
+    # We need to construct the query ourselves (see https://github.com/requests/requests/issues/1454).
+    # If we don't, the URL will be: '/mediahaven-rest-api/resources/media/?q=%2B%28MediaObjectType%3ASet%29&nrOfResults=1'
+    # Request multiple sets since not all will have children
+    getsetrequest = requests.get(getseturl + '?q=%2B(MediaObjectType:Set)',
+                                 auth=HTTPBasicAuth(arguments.username, arguments.password))
+    getsetresponse = getsetrequest.json();
+    nr_of_results = getsetresponse['totalNrOfResults']
+    logging.info('totalNrOfResults is: %s' % nr_of_results)
+    setresults = getsetresponse['mediaDataList']
+    if setresults:
+        for complex in setresults:
+            fragmentid = complex['fragmentId']
+            logging.debug('Checking fragmentId "%s" for children...' % fragmentid)
+            nrofchildren = checknumberofchildren(arguments, fragmentid)
+            if nrofchildren > 0:
+                logging.info('Found a set (%s) with %s children.' % (fragmentid, nrofchildren))
+                performoperations(arguments, fragmentid)
+                break
+
+def checknumberofchildren(arguments, fragmentid):
+    url = arguments.baseurl + PATH + fragmentid + '/children'
     getchildrenrequest = requests.get(url, auth=HTTPBasicAuth(arguments.username, arguments.password))
     jsonresult = getchildrenrequest.json()
     totalnrofresults = jsonresult['totalNrOfResults']
+    return totalnrofresults
+
+
+def performoperations(arguments, fragmentid):
+    url = arguments.baseurl + PATH + fragmentid + '/children'
+    getchildrenrequest = requests.get(url, auth=HTTPBasicAuth(arguments.username, arguments.password))
+    jsonresult = getchildrenrequest.json()
     children = jsonresult['mediaDataList']
-    logging.info('Fragment has ' + str(totalnrofresults) + ' children: ')
 
     rewritedata = []
     counter = 1
@@ -50,25 +80,27 @@ def main():
     deletedchild = children[randomindex]['fragmentId']
 
     # Remove the object from the ensemble
-    url = arguments.baseurl + PATH + arguments.fragment_id + '/children/' + deletedchild
+    url = arguments.baseurl + PATH + fragmentid + '/children/' + deletedchild
     deletefromensemblerequest = requests.delete(url, auth=HTTPBasicAuth(arguments.username, arguments.password))
 
     # Add object back to ensemble
-    url = arguments.baseurl + PATH + arguments.fragment_id + '/children'
+    url = arguments.baseurl + PATH + fragmentid + '/children'
     deletedata = {'id': (None, deletedchild)}
     logging.info('Re-adding the previously deleted object')
-    addensemblerequest = requests.post(url, files=deletedata, auth=HTTPBasicAuth(arguments.username, arguments.password))
+    addensemblerequest = requests.post(url, files=deletedata,
+                                       auth=HTTPBasicAuth(arguments.username, arguments.password))
 
     # Rewrite ensemble
-    url = arguments.baseurl + PATH + arguments.fragment_id + '/children'
+    url = arguments.baseurl + PATH + fragmentid + '/children'
     logging.info('Rewriting the object')
-    rewriteensemblerequest = requests.put(url, files=rewritedata, auth=HTTPBasicAuth(arguments.username, arguments.password))
+    rewriteensemblerequest = requests.put(url, files=rewritedata,
+                                          auth=HTTPBasicAuth(arguments.username, arguments.password))
 
     # Sleep
     logging.info('Sleeping to make sure the update persisted')
     time.sleep(5)
 
-    url = arguments.baseurl + PATH + arguments.fragment_id + '/children'
+    url = arguments.baseurl + PATH + fragmentid + '/children'
     getchildrenrequest = requests.get(url, auth=HTTPBasicAuth(arguments.username, arguments.password))
     jsonresult = getchildrenrequest.json()
     totalnrofresults = jsonresult['totalNrOfResults']
@@ -100,9 +132,6 @@ def init_logger():
 
 
 def check_arguments(arguments):
-    if arguments.fragment_id is None:
-        close("No fragment id specified")
-
     if arguments.username is None:
         close("No username specified")
 
