@@ -1,7 +1,9 @@
 # ensemble-rewrite-test
-Tests the rewrite methods of MH
+
+Tests the rewrite methods of MH.
 
 ## Goal
+
 This code tests the MH API to:
 - List children within an ensemble
 - Delete a child from an ensemble
@@ -9,14 +11,17 @@ This code tests the MH API to:
 - Rewrite the whole ensemble
 
 ## Usage
+
 Run the code using python3 in the following manner:
-`python3 test_complex_objects.py --fragment_id 3274e0c3b03743dda7f96ec0b28d904f9bdcc87f625645a69dde31ccaea0b3e907198c9d6b0d480a9f6af70862663c6e --username myusername --password mypwd`
+
+```$ python3 test_complex_objects.py --fragment_id 3274e0c3b03743dda7f96ec0b28d904f9bdcc87f625645a69dde31ccaea0b3e907198c9d6b0d480a9f6af70862663c6e --username myusername --password mypwd```
 
 Optionally, an environment (`--environment QAS` or `--environment PRD`) can be used to perform the tests on either of those environments (run in PRD at your own risk!).
 
-The `fragment_id` parameter must be a `fragment_id` from an ensemble. The code will list how many (and which) children the object has, delete one, re-add it, and completely re-write the ensemble.
+The code will list how many (and which) children the object has, delete one, re-add it, and completely re-write the ensemble.
 
 ### Example output:
+
 ```
 2018-02-08 09:30:12,514   INFO    : Running in environment: QAS
 2018-02-08 09:30:14,017   INFO    : Fragment has 25 children:
