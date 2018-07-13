@@ -112,21 +112,6 @@ def close(message):
 
 
 def main():
-    arguments = Arguments()
-    init_logger()
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-u', '--username', type=str, dest='username',
-            required=True,
-            help='Username to use when connecting to mediahaven.')
-    parser.add_argument('-p', '--password', type=str, dest='password',
-            required=True,
-            help='Password to use when connecting to mediahaven.')
-    parser.add_argument('-e', '--environment', type=str, choices=['QAS', 'PRD'],
-            help='The environment to test. QAS or PRD.')
-    parser.parse_args(namespace=arguments)
-
-    check_arguments(arguments)
-
     logging.info('Running in environment: ' + arguments.environment)
 
     getseturl = arguments.baseurl + PATH
@@ -149,4 +134,20 @@ def main():
                 performoperations(arguments, fragmentid)
                 break
 
-main()
+if __name__ == "__main__":
+    arguments = Arguments()
+    init_logger()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-u', '--username', type=str, dest='username',
+            required=True,
+            help='Username to use when connecting to mediahaven.')
+    parser.add_argument('-p', '--password', type=str, dest='password',
+            required=True,
+            help='Password to use when connecting to mediahaven.')
+    parser.add_argument('-e', '--environment', type=str, choices=['QAS', 'PRD'],
+            help='The environment to test. QAS or PRD.')
+    parser.parse_args(namespace=arguments)
+
+    check_arguments(arguments)
+    
+    main()
