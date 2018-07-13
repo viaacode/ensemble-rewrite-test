@@ -24,8 +24,10 @@ def checknumberofchildren(arguments, base_url, fragmentid):
     return totalnrofresults
 
 def performoperations(arguments, base_url, fragmentid):
+    # Requests authorization object
+    mh_auth = HTTPBasicAuth(arguments.username, arguments.password)
     url = base_url + fragmentid + '/children'
-    getchildrenrequest = requests.get(url, auth=HTTPBasicAuth(arguments.username, arguments.password))
+    getchildrenrequest = requests.get(url, auth=mh_auth)
     jsonresult = getchildrenrequest.json()
     children = jsonresult['mediaDataList']
 
@@ -44,27 +46,27 @@ def performoperations(arguments, base_url, fragmentid):
 
     # Remove the object from the ensemble
     url = base_url + fragmentid + '/children/' + deletedchild
-    deletefromensemblerequest = requests.delete(url, auth=HTTPBasicAuth(arguments.username, arguments.password))
+    deletefromensemblerequest = requests.delete(url, auth=mh_auth)
 
     # Add object back to ensemble
     url = base_url + fragmentid + '/children'
     deletedata = {'id': (None, deletedchild)}
     logging.info('Re-adding the previously deleted object')
     addensemblerequest = requests.post(url, files=deletedata,
-                                       auth=HTTPBasicAuth(arguments.username, arguments.password))
+                                       auth=mh_auth)
 
     # Rewrite ensemble
     url = base_url + fragmentid + '/children'
     logging.info('Rewriting the object')
     rewriteensemblerequest = requests.put(url, files=rewritedata,
-                                          auth=HTTPBasicAuth(arguments.username, arguments.password))
+                                          auth=mh_auth)
 
     # Sleep
     logging.info('Sleeping to make sure the update persisted')
     time.sleep(5)
 
     url = base_url + fragmentid + '/children'
-    getchildrenrequest = requests.get(url, auth=HTTPBasicAuth(arguments.username, arguments.password))
+    getchildrenrequest = requests.get(url, auth=mh_auth)
     jsonresult = getchildrenrequest.json()
     totalnrofresults = jsonresult['totalNrOfResults']
     children = jsonresult['mediaDataList']
