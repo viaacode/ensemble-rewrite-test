@@ -16,7 +16,7 @@ Run the code using python3 in the following manner:
 
 ```$ python3 test_complex_objects.py --username myusername --password mypwd```
 
-Optionally, an environment (`--environment QAS` or `--environment PRD`) can be used to perform the tests on either of those environments (run in PRD at your own risk!).
+Optionally, an environment (`--environment QAS` or `--environment PRD`) can be used to perform the tests on either of those environments. Defaults to `QAS` (run in `PRD` at your own risk!).
 
 The code will list how many (and which) children the object has, delete one, re-add it, and completely re-write the ensemble.
 
