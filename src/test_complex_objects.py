@@ -69,7 +69,7 @@ def performoperations(arguments, base_url, fragmentid):
     jsonresult = getchildrenrequest.json()
     totalnrofresults = jsonresult['totalNrOfResults']
     children = jsonresult['mediaDataList']
-    logging.info('Fragment has ' + str(totalnrofresults) + ' children.')
+    logging.info('Fragment has %s children', totalnrofresults)
 
 def init_logger():
     # create logger with 'spam_application'
@@ -92,10 +92,6 @@ def init_logger():
         logger.addHandler(fh)
     except PermissionError:
         logging.error("Permission denied for {}".format(logfile))
-
-def close(message):
-    logging.error(message)
-    exit(1)
 
 
 def main(cmd_args):
