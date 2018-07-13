@@ -1,10 +1,13 @@
 # ensemble-rewrite-test
 
-Tests the rewrite methods of MH.
+## Synopsis
+
+Tests the rewrite methods of MediaHaven for ensembles. Ensembles are sets or collections of media objects. API information on ensembles can be found here: [https://archief.viaa.be/mediahaven-rest-api/#mediahaven-rest-api-manual-working-with-ensembles](https://archief.viaa.be/mediahaven-rest-api/#mediahaven-rest-api-manual-working-with-ensembles).
 
 ## Goal
 
-This code tests the MH API to:
+This code tests the MediaHaven API to:
+
 - List children within an ensemble
 - Delete a child from an ensemble
 - Add a child to an ensemble
@@ -12,11 +15,24 @@ This code tests the MH API to:
 
 ## Usage
 
-Run the code using python3 in the following manner:
+```$ python3 test_complex_objects.py --help
+
+usage: test_complex_objects.py [-h] -u USERNAME -p PASSWORD [-e {QAS,PRD}]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -u USERNAME, --username USERNAME
+                        Username to use when connecting to mediahaven.
+  -p PASSWORD, --password PASSWORD
+                        Password to use when connecting to mediahaven.
+  -e {QAS,PRD}, --environment {QAS,PRD}
+                        The environment to test. QAS or PRD.```
+
+Thus, run the code using python3 in the following manner:
 
 ```$ python3 test_complex_objects.py --username myusername --password mypwd```
 
-Optionally, an environment (`--environment QAS` or `--environment PRD`) can be used to perform the tests on either of those environments. Defaults to `QAS` (run in `PRD` at your own risk!).
+Optionally, an `environment` argument (`--environment QAS` or `--environment PRD`) can be used to perform the tests on either of those environments. Defaults to `QAS` (run in `PRD` at your own risk!).
 
 The code will list how many (and which) children the object has, delete one, re-add it, and completely re-write the ensemble.
 
