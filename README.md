@@ -15,7 +15,8 @@ This code tests the MediaHaven API to:
 
 ## Usage
 
-```$ python3 test_complex_objects.py --help
+```
+$ python3 test_complex_objects.py --help
 
 usage: test_complex_objects.py [-h] -u USERNAME -p PASSWORD [-e {QAS,PRD}]
 
@@ -26,11 +27,14 @@ optional arguments:
   -p PASSWORD, --password PASSWORD
                         Password to use when connecting to mediahaven.
   -e {QAS,PRD}, --environment {QAS,PRD}
-                        The environment to test. QAS or PRD.```
+                        The environment to test. QAS or PRD.
+```
 
 Thus, run the code using python3 in the following manner:
 
-```$ python3 test_complex_objects.py --username myusername --password mypwd```
+```
+$ python3 test_complex_objects.py --username myusername --password mypwd
+```
 
 Optionally, an `environment` argument (`--environment QAS` or `--environment PRD`) can be used to perform the tests on either of those environments. Defaults to `QAS` (run in `PRD` at your own risk!).
 
