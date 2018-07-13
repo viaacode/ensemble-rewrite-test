@@ -7,7 +7,6 @@ import random
 import requests
 import time
 from requests.auth import HTTPBasicAuth
-from arguments import Arguments
 
 __author__ = 'viaa'
 
@@ -99,7 +98,7 @@ def close(message):
     exit(1)
 
 
-def main():
+def main(cmd_args):
     logging.info('Running in environment: %s', cmd_args.environment)
     base_url = BASEURL_QAS if cmd_args.environment.lower() == 'qas' else BASEURL_PRD
     getseturl = base_url + PATH
@@ -126,7 +125,6 @@ def main():
 if __name__ == "__main__":
     init_logger()
     # Parse the command line arguments
-    cmd_args = Arguments()
     parser = argparse.ArgumentParser(prog="ensemble-rewrite-test",
                 description="""Tests the rewrite methods of MediaHaven
                     for ensembles.""")
@@ -138,6 +136,6 @@ if __name__ == "__main__":
             help='Password to use when connecting to mediahaven.')
     parser.add_argument('-e', '--environment', type=str, choices=['QAS', 'PRD'],
             help='The environment to test. QAS or PRD.')
-    parser.parse_args(namespace=cmd_args)
+    cmd_args = parser.parse_args()
     # And off we go...
-    main()
+    main(cmd_args)
