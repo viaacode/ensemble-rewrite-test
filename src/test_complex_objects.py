@@ -135,7 +135,7 @@ if __name__ == "__main__":
             help='Password to use when connecting to mediahaven.')
     parser.add_argument('-e', '--environment', type=str, choices=['QAS', 'PRD'],
             default='QAS',
-            help='The environment to test. QAS or PRD.')
+            help='The environment to test. QAS or PRD. Defaults to QAS.')
     cmd_args = parser.parse_args()
     # And off we go...
     main(cmd_args)

@@ -18,7 +18,9 @@ This code tests the MediaHaven API to:
 ```
 $ python3 test_complex_objects.py --help
 
-usage: test_complex_objects.py [-h] -u USERNAME -p PASSWORD [-e {QAS,PRD}]
+usage: ensemble-rewrite-test [-h] -u USERNAME -p PASSWORD [-e {QAS,PRD}]
+
+Tests the rewrite methods of MediaHaven for ensembles.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -27,7 +29,7 @@ optional arguments:
   -p PASSWORD, --password PASSWORD
                         Password to use when connecting to mediahaven.
   -e {QAS,PRD}, --environment {QAS,PRD}
-                        The environment to test. QAS or PRD.
+                        The environment to test. QAS or PRD. Defaults to QAS.
 ```
 
 Thus, run the code using python3 in the following manner:
