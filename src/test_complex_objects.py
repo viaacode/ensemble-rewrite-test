@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import sys
 import argparse
 import logging
 import random
@@ -107,6 +108,7 @@ def main(cmd_args):
     getsetresponse = getsetrequest.json();
     nr_of_results = getsetresponse['totalNrOfResults']
     logging.info('Sets found (totalNrOfResults): %s', nr_of_results)
+    if not input("Continue? (y/n): ").lower().strip()[:1] == "y": sys.exit(0)
     setresults = getsetresponse['mediaDataList']
     if setresults:
         for complex in setresults:
@@ -115,6 +117,7 @@ def main(cmd_args):
             nrofchildren = checknumberofchildren(cmd_args, getseturl, fragmentid)
             if nrofchildren > 0:
                 logging.info('Found a set (%s) with %s children.', fragmentid, nrofchildren)
+                if not input("Continue? (y/n): ").lower().strip()[:1] == "y": sys.exit(0)
                 performoperations(cmd_args, getseturl, fragmentid)
                 break
 
