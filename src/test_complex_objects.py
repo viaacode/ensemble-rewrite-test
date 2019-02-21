@@ -106,10 +106,13 @@ def main(cmd_args):
     getsetrequest = requests.get(getseturl + '?q=%2B(MediaObjectType:Set)',
                                  auth=HTTPBasicAuth(cmd_args.username, cmd_args.password))
     getsetresponse = getsetrequest.json();
-    nr_of_results = getsetresponse['totalNrOfResults']
+    nr_of_results  = getsetresponse.get('totalNrOfResults', 0)
     logging.info('Sets found (totalNrOfResults): %s', nr_of_results)
-    if not input("Continue? (y/n): ").lower().strip()[:1] == "y": sys.exit(0)
-    setresults = getsetresponse['mediaDataList']
+    if not nr_of_results:
+        if not input('No sets found for user "%s". Continue? (y/n): ' % cmd_args.username).lower().strip()[:1] == "y": sys.exit(0)
+    else:
+        if not input("Continue? (y/n): ").lower().strip()[:1] == "y": sys.exit(0)
+    setresults = getsetresponse.get('mediaDataList', None)
     if setresults:
         for complex in setresults:
             fragmentid = complex['fragmentId']
