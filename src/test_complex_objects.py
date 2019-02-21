@@ -135,3 +135,5 @@ if __name__ == "__main__":
     cmd_args = parser.parse_args()
     # And off we go...
     main(cmd_args)
+
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
